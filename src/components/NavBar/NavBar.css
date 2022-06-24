@@ -1,0 +1,22 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+  
+nav {
+  text-align: center;
+  width: 100%;
+  min-height: 5em;
+  max-height: 10em;
+  background-color: yellow;
+}
+
+nav div {
+  display: inline-block;
+  margin: 2em;
+}
+
+Link {
+  text-decoration: none;
+}
