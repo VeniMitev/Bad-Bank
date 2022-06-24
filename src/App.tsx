@@ -12,18 +12,18 @@ import { AllData } from './components/AllData/AllData';
 
 function App() {
   return (
-    <>
-      <NavBar />
-      <Routes>
-        <Route path='/' element={<Home />} />
-        <Route path='/create-account' element={<CreateAccount />} />
-        <Route path='/login' element={<Login />} />
-        <Route path='/deposit' element={<Deposit />} />
-        <Route path='/withdraw' element={<Withdraw />} />
-        <Route path='/balance' element={<Balance />} />
-        <Route path='/alldata' element={<AllData />} />
-      </Routes>
-    </>
+    <div className='app'>
+        <NavBar />
+        <Routes>
+          <Route path='/' element={<Home />} />
+          <Route path='/create-account' element={<CreateAccount />} />
+          <Route path='/login' element={<Login />} />
+          <Route path='/deposit' element={<Deposit />} />
+          <Route path='/withdraw' element={<Withdraw />} />
+          <Route path='/balance' element={<Balance />} />
+          <Route path='/alldata' element={<AllData />} />
+        </Routes>
+    </div>
   );
 }
 

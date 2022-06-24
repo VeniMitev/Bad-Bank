@@ -9,6 +9,9 @@ export let NavBar = () => {
 
     return (
         <nav>
+            <div className='logo'>
+                <h1>BadBank</h1>
+            </div>
             <div>
                 <Link style={linkStyles} to='/'>Home</Link>
             </div>
