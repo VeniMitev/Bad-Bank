@@ -4,4 +4,8 @@
     padding: 0;
   }
   
-  
+.card-container {
+  align-content: center;
+  width: 20em;
+  margin: 2em auto auto auto
+}
