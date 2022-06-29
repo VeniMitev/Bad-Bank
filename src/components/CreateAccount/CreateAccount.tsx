@@ -41,54 +41,63 @@ export let CreateAccount = () => {
         setShow(true);
     }
 
-
     return (
         <div className='card-container'>
-            <Card bg='primary'>
-                <Card.Header>Login</Card.Header>
-                <Card.Body>
-                    {show ? (
+            {show ? (
+                <Card bg='primary'>
+                    <Card.Header><h3>Create Account</h3></Card.Header>
+                    <Card.Body>
                         <>
-                            <h4>Name</h4>
+                            <h5>Name</h5>
                             <input 
                                 type="input" 
                                 id='name' 
                                 value={name} 
                                 onChange={e => setName(e.currentTarget.value)} 
                             />
-                            <h4>Email</h4>
+                            <h5>Email</h5>
                             <input 
                                 type="input" 
                                 id='email' 
                                 value={email} 
                                 onChange={e => setEmail(e.currentTarget.value)} 
                             />
-                            <h4>Password</h4>
+                            <h5>Password</h5>
                             <input 
                                 type="password" 
                                 id='password' 
                                 value={password} 
                                 onChange={e => setPassword(e.currentTarget.value)} 
                             />
-                            <br />
-                            <button type='submit' className='btn btn-light' onClick={handleCreate}>
-                                Create Account
-                            </button>
                         </>
-                    ):(
-                        <>
-                            <h4>Success</h4>
-                            <button 
-                                type='submit' 
-                                className='btn btn-light'
-                                onClick={clearForm}
-                            >
-                                Add Another Account</button>
-                        </>
-                    )}
-                </Card.Body>
-            </Card>
+                    </Card.Body>
+                    <Card.Footer>
+                        <Button
+                            variant='light'
+                            type='submit'
+                            onClick={handleCreate}
+                        >
+                            Submit
+                        </Button>
+                    </Card.Footer>
+                </Card>
+            ):(
+                <Card bg='primary'>
+                    <Card.Header>Login</Card.Header>
+                    <Card.Body>
+                        <h5>Success</h5>
+                    </Card.Body>
+                    <Card.Footer>
+                        <Button
+                            variant='light'
+                            type='submit'
+                            onClick={clearForm}
+                        >
+                            Add Another Account
+                        </Button>
+                    </Card.Footer>
+                </Card>
+            )}                
         </div>
-
     );
 }
