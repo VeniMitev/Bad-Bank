@@ -11,25 +11,28 @@ export let AllData = () => {
         email, 
         password, 
         balance,
+        login
     }:{ 
         name: string; 
         email: string;
         password: string; 
         balance: number;
+        login: boolean
     }, index: number) => {
-        return <tr>
+        return <tr key={index + 1}>
             <th>{index + 1}</th>
             <th>{name}</th>
             <th>{email}</th>
             <th>{password}</th>
-            <th>{balance}</th>
+            <th>${balance}</th>
+            <th>{login ? 'Yes' : 'No'}</th>
         </tr>
     });
 
     return (
         <div className='alldata-table'>
             <h1>AllData</h1>
-            <Table striped bordered hover>
+            <Table striped bordered hover responsive>
                 <thead>
                     <tr>
                         <th>ID</th>
@@ -37,13 +40,13 @@ export let AllData = () => {
                         <th>Email</th>
                         <th>Password</th>
                         <th>Balance</th>
+                        <th>Logged In</th>
                     </tr>
                 </thead>
                 <tbody>
                     {account}
                 </tbody>
             </Table>
-        </div>
-        
+        </div>        
     );
 }

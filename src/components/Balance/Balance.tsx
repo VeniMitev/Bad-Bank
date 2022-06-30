@@ -1,11 +1,23 @@
 import React from 'react';
+import { useState, useEffect } from 'react';
 import { UserContext } from '../../context';
 import './Balance.css';
 import Card from 'react-bootstrap/Card';
-import { Button } from 'react-bootstrap';
 
 export let Balance = () => {
-    const ctx = React.useContext(UserContext)
+    const [activeUser, setActiveUser] = useState({balance:0});
+
+    const ctx: any = React.useContext(UserContext);
+
+    const user = ctx.users.filter(({login}:{login: boolean}) => {
+        return login === true;
+    });
+
+    useEffect(() =>{
+        setActiveUser(user[0])
+        console.log(activeUser)
+    }, [activeUser]);
+
     return (
         <div className="card-container">
             <Card bg='primary'>
@@ -13,7 +25,7 @@ export let Balance = () => {
                 <Card.Body>
                     <>
                         <h5>Current Balance</h5>
-                        <p>$100</p>
+                        <p>{activeUser.balance}</p>
                     </>
                 </Card.Body>
             </Card>

@@ -1,11 +1,31 @@
 import React from 'react';
+import { useState, useEffect } from 'react';
 import { UserContext } from '../../context';
-import './Withdraw.css';
+import './Withdraw.css'
 import Card from 'react-bootstrap/Card';
 import { Button } from 'react-bootstrap';
 
 export let Withdraw = () => {
-    const ctx = React.useContext(UserContext)
+    const [activeUser, setActiveUser] = useState({balance:0});
+    const [withdraw, setWithdraw] = useState(0)
+
+    const ctx: any = React.useContext(UserContext);
+
+    const user = ctx.users.filter(({login}:{login: boolean}) => {
+        return login === true;
+    });
+
+    useEffect(() =>{
+        setActiveUser(user[0])
+        console.log(activeUser)
+        
+    }, [activeUser]);
+
+    const handleWithdraw = () => {
+        activeUser.balance -= withdraw
+        console.log(activeUser.balance)
+    }
+
     return (
         <div className="card-container">
             <Card bg='primary'>
@@ -13,13 +33,19 @@ export let Withdraw = () => {
                 <Card.Body>
                     <>
                         <h5>Withdraw Amount</h5>
-                        <input type="number" />
+                        <input 
+                            type='number'
+                            id='withdraw'
+                            value={withdraw} 
+                            onChange={e => setWithdraw(Number(e.currentTarget.value))}                     
+                        />
                     </>
                 </Card.Body>
                 <Card.Footer>
                     <Button
                         variant='light'
                         type='submit'
+                        onClick={handleWithdraw}
                     >
                         Withdraw
                     </Button>
