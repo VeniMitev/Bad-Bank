@@ -16,7 +16,7 @@ export let Balance = () => {
     useEffect(() =>{
         setActiveUser(user[0])
         console.log(activeUser)
-    }, [activeUser]);
+    }, [activeUser, user]);
 
     return (
         <div className="card-container">

@@ -19,7 +19,7 @@ export let Deposit = () => {
         setActiveUser(user[0])
         console.log(activeUser)
         
-    }, [activeUser]);
+    }, [activeUser, user]);
 
     const handleDeposit = () => {
         activeUser.balance += deposit

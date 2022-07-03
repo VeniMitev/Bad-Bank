@@ -19,7 +19,7 @@ export let Withdraw = () => {
         setActiveUser(user[0])
         console.log(activeUser)
         
-    }, [activeUser]);
+    }, [activeUser, user]);
 
     const handleWithdraw = () => {
         activeUser.balance -= withdraw

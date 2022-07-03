@@ -8,7 +8,6 @@ import { Button } from 'react-bootstrap';
 
 export let Login = () => {
     const [show, setShow] = useState(true);
-    const [logged, setLogged] = useState(false);
     const [status, setStatus] = useState('');
     const [loginEmail, setLoginEmail] = useState('');
     const [loginPassword, setLoginPassword] = useState('');
@@ -38,6 +37,9 @@ export let Login = () => {
     }
 
     const handleLogin = () => {
+        ctx.users.forEach((user: any) => {
+            user.login = false;           
+        })
         if (!validate(loginEmail, 'email')) return;
         if (!validate(loginPassword, 'password')) return;
 
@@ -45,25 +47,30 @@ export let Login = () => {
             return loginEmail === email && loginPassword === password;
         });
 
-        console.log(ctx.users)
-        setActiveUser(user[0])
-        setShow(false)
-        
+        setActiveUser(user[0]);
+        setShow(false);
     }
 
     useEffect(() =>{
         activeUser.login = true;
-        console.log(activeUser)
-    }, [activeUser]);
+    }, [activeUser, ctx.users]);
 
     const handleLogout = () => {
         setLoginEmail('')
         setLoginPassword('')
-        setLogged(false);
         setShow(true);
-        console.log(ctx.users)
         setActiveUser({name: '', login: false})
-        activeUser.login = false;
+        // activeUser.login = false;
+
+        ctx.users.forEach((user: any) => {
+            user.login = false;
+            console.log(ctx);            
+        })
+    }
+
+    const callLog = () => {
+        console.log(ctx.users)
+        console.log(activeUser)
     }
 
     return (
@@ -117,6 +124,8 @@ export let Login = () => {
                     </Card.Footer>
                 </Card>
             )} 
+
+            <Button onClick={callLog} >console.log</Button>
         </div>
     );
 }
