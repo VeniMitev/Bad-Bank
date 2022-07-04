@@ -60,7 +60,6 @@ export let Login = () => {
         setLoginPassword('')
         setShow(true);
         setActiveUser({name: '', login: false})
-        // activeUser.login = false;
 
         ctx.users.forEach((user: any) => {
             user.login = false;

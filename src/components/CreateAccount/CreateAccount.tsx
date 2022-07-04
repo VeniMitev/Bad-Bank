@@ -19,7 +19,6 @@ export let CreateAccount = () => {
         if (!field) {
             setStatus(`Error: ${label}`);
             setTimeout(() => setStatus(''), 3000);
-            console.log(status)
             return false;
         }
         return true;

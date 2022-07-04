@@ -36,21 +36,9 @@ export let NavBar = () => {
                     </Nav.Link>
                     <Nav.Link
                         as={NavLink}
-                        to='/deposit'
+                        to='/manage-account'
                     >
-                        Deposit
-                    </Nav.Link>
-                    <Nav.Link
-                        as={NavLink}
-                        to='/withdraw'
-                    >
-                        Withdraw
-                    </Nav.Link>
-                    <Nav.Link
-                        as={NavLink}
-                        to='/balance'
-                    >
-                        Balance
+                        Manage Account
                     </Nav.Link>
                     <Nav.Link
                         as={NavLink}
@@ -64,65 +52,3 @@ export let NavBar = () => {
         </Navbar>
     );
 }
-
-{/* <nav>
-<div className='logo'>
-    <h1>BadBank</h1>
-</div>
-<div>
-    <NavLink 
-        to='/' 
-        style={({isActive}) => isActive ? linkActive : linkNotActive}
-    >
-        Home
-    </NavLink>
-</div>
-<div>
-    <NavLink 
-        to='/create-account'
-        style={({isActive}) => isActive ? linkActive : linkNotActive}
-    >
-        Create Account
-    </NavLink>
-</div>
-<div>
-    <NavLink 
-        to='/login'
-        style={({isActive}) => isActive ? linkActive : linkNotActive}
-    >
-        Login
-    </NavLink>
-</div>
-<div>
-    <NavLink 
-        to='/deposit'
-        style={({isActive}) => isActive ? linkActive : linkNotActive}
-    >
-        Deposit
-    </NavLink>
-</div>
-<div>
-    <NavLink 
-        to='/withdraw'
-        style={({isActive}) => isActive ? linkActive : linkNotActive}
-    >
-        Withdraw
-    </NavLink>
-</div>
-<div>
-    <NavLink 
-        to='/balance'
-        style={({isActive}) => isActive ? linkActive : linkNotActive}    
-    >
-        Balance
-    </NavLink>
-</div>
-<div>
-    <NavLink 
-        to='/alldata'
-        style={({isActive}) => isActive ? linkActive : linkNotActive}
-    >
-        AllData
-    </NavLink>
-</div>
-</nav> */}

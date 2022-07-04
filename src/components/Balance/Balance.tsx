@@ -15,7 +15,7 @@ export let Balance = () => {
 
     useEffect(() =>{
         setActiveUser(user[0])
-        console.log(activeUser)
+        if (!activeUser) return;
     }, [activeUser, user]);
 
     return (
@@ -25,7 +25,7 @@ export let Balance = () => {
                 <Card.Body>
                     <>
                         <h5>Current Balance</h5>
-                        <p>{activeUser.balance}</p>
+                        <p>{activeUser ? `$${activeUser.balance}` : `Login to display Information`}</p>
                     </>
                 </Card.Body>
             </Card>

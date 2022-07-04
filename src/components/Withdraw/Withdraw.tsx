@@ -17,13 +17,11 @@ export let Withdraw = () => {
 
     useEffect(() =>{
         setActiveUser(user[0])
-        console.log(activeUser)
         
     }, [activeUser, user]);
 
     const handleWithdraw = () => {
-        activeUser.balance -= withdraw
-        console.log(activeUser.balance)
+        activeUser.balance -= withdraw;
     }
 
     return (
