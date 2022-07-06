@@ -14,8 +14,7 @@ root.render(
   <UserContext.Provider value={
     {
       users:[
-        {name: 'veni', email: 'veni@mit.edu', password: '123',balance: 100, login: true},
-        {name: 'test', email: 'test@mit.edu', password: '123',balance: 100, login: false} 
+        
       ]
     }
   }>

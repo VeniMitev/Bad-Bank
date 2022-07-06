@@ -1,19 +1,23 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
 import { UserContext } from '../../context';
-import './Login.css'
-import Card from 'react-bootstrap/Card';
-import { Button } from 'react-bootstrap';
+import './Login.css';
+import { Button, Card } from 'react-bootstrap';
+import { useNavigate } from "react-router-dom";
 
 
 export let Login = () => {
-    const [show, setShow] = useState(true);
+    const ctx: any = React.useContext(UserContext);
+    const user = ctx.users.find(({login}:{login: boolean}) => {
+        return login === true;
+    });
+
+    const [show, setShow] = useState(!user);
     const [status, setStatus] = useState('');
     const [loginEmail, setLoginEmail] = useState('');
     const [loginPassword, setLoginPassword] = useState('');
     const [activeUser, setActiveUser] = useState({name: '', login: false});
-
-    const ctx: any = React.useContext(UserContext);
+    const navigate = useNavigate();
 
     const validate = (field: any, label: any) => {
         if (!field) {
@@ -53,7 +57,7 @@ export let Login = () => {
 
     useEffect(() =>{
         activeUser.login = true;
-    }, [activeUser, ctx.users]);
+    }, [activeUser]);
 
     const handleLogout = () => {
         setLoginEmail('')
@@ -70,12 +74,17 @@ export let Login = () => {
     const callLog = () => {
         console.log(ctx.users)
         console.log(activeUser)
+        console.log(show)
+    }
+
+    const handleRedirect = () => {
+        navigate('/manage-account');
     }
 
     return (
         <div className="card-container">
             {show ? (
-                <Card bg='primary'>
+                <Card bg='light' border='secondary'>
                     <Card.Header><h3>Login</h3></Card.Header>
                     <Card.Body>
                         <>
@@ -97,7 +106,7 @@ export let Login = () => {
                     </Card.Body>
                     <Card.Footer>
                         <Button
-                            variant='light'
+                            variant='primary'
                             type='submit'
                             onClick={handleLogin}
                         >
@@ -119,6 +128,14 @@ export let Login = () => {
                             onClick={handleLogout}
                         >
                             Log Out
+                        </Button>
+                        {' '}
+                        <Button
+                            variant='light'
+                            type='submit'
+                            onClick={handleRedirect}
+                        >
+                            Manage Account
                         </Button>
                     </Card.Footer>
                 </Card>

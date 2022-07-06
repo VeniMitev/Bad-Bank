@@ -5,7 +5,7 @@ import { NavBar } from './components/NavBar/NavBar';
 import { Home } from './components/Home/Home';
 import { CreateAccount } from './components/CreateAccount/CreateAccount';
 import { Login } from './components/Login/Login';
-import { ManageAccount } from './components/ManageAcoount/ManageAccount';
+import { ManageAccount } from './components/ManageAccount/ManageAccount';
 import { AllData } from './components/AllData/AllData';
 
 function App() {

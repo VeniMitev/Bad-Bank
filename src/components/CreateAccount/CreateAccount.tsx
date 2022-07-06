@@ -29,7 +29,7 @@ export let CreateAccount = () => {
         if (!validate(name, 'name')) return;
         if (!validate(email, 'email')) return;
         if (!validate(password, 'password')) return;
-        ctx.users.push({name, email, password, balance: 100, login: false})
+        ctx.users.push({name, email, password, balance: 100, login: true})
         setShow(false)
     }
 
@@ -43,7 +43,7 @@ export let CreateAccount = () => {
     return (
         <div className='card-container'>
             {show ? (
-                <Card bg='primary'>
+                <Card bg='light' border='secondary'>
                     <Card.Header><h3>Create Account</h3></Card.Header>
                     <Card.Body>
                         <>
@@ -72,7 +72,7 @@ export let CreateAccount = () => {
                     </Card.Body>
                     <Card.Footer>
                         <Button
-                            variant='light'
+                            variant='primary'
                             type='submit'
                             onClick={handleCreate}
                         >
@@ -81,14 +81,14 @@ export let CreateAccount = () => {
                     </Card.Footer>
                 </Card>
             ):(
-                <Card bg='primary'>
+                <Card bg='light' border='secondary'>
                     <Card.Header>Login</Card.Header>
                     <Card.Body>
                         <h5>Success</h5>
                     </Card.Body>
                     <Card.Footer>
                         <Button
-                            variant='light'
+                            variant='primary'
                             type='submit'
                             onClick={clearForm}
                         >

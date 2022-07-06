@@ -5,6 +5,6 @@ import './Home.css'
 export let Home = () => {
     const ctx = React.useContext(UserContext)
     return (
-        <h1>Home</h1>
+        <h1>Welcome to Your Bad Bank!!</h1>
     );
 }

@@ -7,43 +7,58 @@ import { Button } from 'react-bootstrap';
 import { useNavigate } from "react-router-dom";
 
 export const ManageAccount = () => {
-    const [activeUser, setActiveUser] = useState(null);
-    const [withdraw, setWithdraw] = useState(0);
-    const [balance, setBalance] = useState(0);
-    const [deposit, setDeposit] = useState(0);
     const ctx: any = React.useContext(UserContext);
-    const navigate = useNavigate();
-
     const user = ctx.users.find(({login}:{login: boolean}) => {
         return login === true;
     });
 
+    const [activeUser, setActiveUser] = useState(user);
+    const [withdraw, setWithdraw] = useState(0);
+    const [balance, setBalance] = useState(user);
+    const [deposit, setDeposit] = useState(0);
+    const navigate = useNavigate();
+
+    const balanceStyle = {
+        fontSize: '2rem'
+    }
+
     useEffect(() =>{
         if (!balance) return;
-        setActiveUser(user);
-        setBalance(user.balance);
         if (!activeUser) return;
+        setActiveUser(user);        
+        setBalance(user.balance);
     }, [activeUser, user, balance]);
 
     const handleDeposit = () => {
-        setBalance(user.balance += deposit);
+        let newBalance = user.balance += deposit;
+        setBalance(newBalance);
         setDeposit(0);
     }
 
     const handleWithdraw = () => {
-        setBalance(user.balance -= withdraw);
+        let newBalance = user.balance -= withdraw;
+        setBalance(newBalance);
         setWithdraw(0);
     }
 
-    const handleRedirect = () => {
+    const handleRedirectLogin = () => {
         navigate('/login');
+    }
+
+    const handleRedirectCreate = () => {
+        navigate('/create-account');
+    }
+
+    const callLog = () => {
+        console.log(ctx.users)
+        console.log(activeUser)
     }
  
     return(
         <>
             {activeUser ? (
                 <div className="card-container">
-                <Card bg='primary'>
+                <Card bg='light' border='secondary'>
                     <Card.Header><h3>Deposit</h3></Card.Header>
                     <Card.Body>
                         <>
@@ -59,7 +74,7 @@ export const ManageAccount = () => {
                     </Card.Body>
                     <Card.Footer>
                         <Button
-                            variant='light'
+                            variant='primary'
                             type='submit'
                             onClick={handleDeposit}
                         >
@@ -83,7 +98,7 @@ export const ManageAccount = () => {
                             </Card.Body>
                             <Card.Footer>
                                 <Button
-                                    variant='light'
+                                    variant='primary'
                                     type='submit'
                                     onClick={handleWithdraw}
                                 >
@@ -102,28 +117,36 @@ export const ManageAccount = () => {
                     <Card.Body>
                         <>
                             <h5>Current Balance</h5>
-                            <p>{activeUser ? `$${balance}` : `Login to display Information`}</p>
+                            <p style={balanceStyle}>{activeUser ? `$${balance}` : `Login to display Information`}</p>
                         </>
                     </Card.Body>
                 </Card>
             </div>
             ) : (
                 <div className="card-container">
-                    <Card bg='primary' >
+                    <Card bg='light' border='secondary' >
                         <Card.Body >
-                            <h5>Login First</h5>                        
+                            <h5>Login or Create Account First</h5>                        
                         </Card.Body>
                         <Card.Footer>
                             <Button
-                                variant='light'
-                                onClick={handleRedirect}
+                                variant='primary'
+                                onClick={handleRedirectLogin}
                             >
                               Go To Login
+                            </Button>
+                            {' '}
+                            <Button
+                                variant='primary'
+                                onClick={handleRedirectCreate}
+                            >
+                              Create Account
                             </Button>
                         </Card.Footer>
                     </Card>
                 </div>
             )}
+            <Button onClick={callLog} >console.log</Button>
         </>
     )
 }
