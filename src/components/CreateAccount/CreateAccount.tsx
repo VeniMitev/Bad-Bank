@@ -1,9 +1,9 @@
 import React from 'react';
 import { useState } from 'react';
 import { UserContext } from '../../context';
-import './CreateAccount.css'
-import Card from 'react-bootstrap/Card';
-import { Button } from 'react-bootstrap';
+import './CreateAccount.css';
+import { Button, Card } from 'react-bootstrap';
+import { useNavigate } from "react-router-dom";
 
 
 export let CreateAccount = () => {
@@ -12,6 +12,7 @@ export let CreateAccount = () => {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const navigate = useNavigate();
 
     const ctx: any = React.useContext(UserContext);
 
@@ -19,6 +20,7 @@ export let CreateAccount = () => {
         if (!field) {
             setStatus(`Error: ${label}`);
             setTimeout(() => setStatus(''), 3000);
+            console.log(status)
             return false;
         }
         return true;
@@ -29,7 +31,11 @@ export let CreateAccount = () => {
         if (!validate(name, 'name')) return;
         if (!validate(email, 'email')) return;
         if (!validate(password, 'password')) return;
-        ctx.users.push({name, email, password, balance: 100, login: true})
+        ctx.users.forEach((user: any) => {
+            user.login = false;
+            console.log(ctx);            
+        });
+        ctx.users.push({name, email, password, balance: 100, login: false})
         setShow(false)
     }
 
@@ -38,6 +44,10 @@ export let CreateAccount = () => {
         setEmail('');
         setPassword('');
         setShow(true);
+    }
+
+    const handleRedirect = () => {
+        navigate('/login');
     }
 
     return (
@@ -82,10 +92,19 @@ export let CreateAccount = () => {
                 </Card>
             ):(
                 <Card bg='light' border='secondary'>
-                    <Card.Header>Login</Card.Header>
+                    <Card.Header>Create Account</Card.Header>
                     <Card.Body>
                         <h5>Success</h5>
                     </Card.Body>
+                    <Card.Footer>
+                        <Button
+                            variant='primary'
+                            type='submit'
+                            onClick={handleRedirect}
+                        >
+                            Log In 
+                        </Button>
+                    </Card.Footer>
                     <Card.Footer>
                         <Button
                             variant='primary'

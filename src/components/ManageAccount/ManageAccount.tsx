@@ -1,9 +1,8 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
 import { UserContext } from '../../context';
-import Card from 'react-bootstrap/Card';
-import './ManageAccount.css'
-import { Button } from 'react-bootstrap';
+import './ManageAccount.css';
+import { Button, Card } from 'react-bootstrap';
 import { useNavigate } from "react-router-dom";
 
 export const ManageAccount = () => {
@@ -135,7 +134,8 @@ export const ManageAccount = () => {
                             >
                               Go To Login
                             </Button>
-                            {' '}
+                        </Card.Footer>
+                        <Card.Footer>
                             <Button
                                 variant='primary'
                                 onClick={handleRedirectCreate}

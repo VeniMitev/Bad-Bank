@@ -5,7 +5,6 @@ import './Login.css';
 import { Button, Card } from 'react-bootstrap';
 import { useNavigate } from "react-router-dom";
 
-
 export let Login = () => {
     const ctx: any = React.useContext(UserContext);
     const user = ctx.users.find(({login}:{login: boolean}) => {
@@ -125,17 +124,18 @@ export let Login = () => {
                         <Button
                             variant='light'
                             type='submit'
-                            onClick={handleLogout}
-                        >
-                            Log Out
-                        </Button>
-                        {' '}
-                        <Button
-                            variant='light'
-                            type='submit'
                             onClick={handleRedirect}
                         >
                             Manage Account
+                        </Button>
+                    </Card.Footer>
+                    <Card.Footer>
+                        <Button
+                            variant='light'
+                            type='submit'
+                            onClick={handleLogout}
+                        >
+                            Log Out
                         </Button>
                     </Card.Footer>
                 </Card>
