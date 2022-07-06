@@ -35,6 +35,7 @@ export const ManageAccount = () => {
     }
 
     const handleWithdraw = () => {
+        if (withdraw > balance) return;
         let newBalance = user.balance -= withdraw;
         setBalance(newBalance);
         setWithdraw(0);
@@ -46,11 +47,6 @@ export const ManageAccount = () => {
 
     const handleRedirectCreate = () => {
         navigate('/create-account');
-    }
-
-    const callLog = () => {
-        console.log(ctx.users)
-        console.log(activeUser)
     }
  
     return(
@@ -132,7 +128,7 @@ export const ManageAccount = () => {
                                 variant='primary'
                                 onClick={handleRedirectLogin}
                             >
-                              Go To Login
+                              Log In
                             </Button>
                         </Card.Footer>
                         <Card.Footer>
@@ -146,7 +142,6 @@ export const ManageAccount = () => {
                     </Card>
                 </div>
             )}
-            <Button onClick={callLog} >console.log</Button>
         </>
     )
 }

@@ -70,12 +70,6 @@ export let Login = () => {
         })
     }
 
-    const callLog = () => {
-        console.log(ctx.users)
-        console.log(activeUser)
-        console.log(show)
-    }
-
     const handleRedirect = () => {
         navigate('/manage-account');
     }
@@ -139,9 +133,7 @@ export let Login = () => {
                         </Button>
                     </Card.Footer>
                 </Card>
-            )} 
-
-            <Button onClick={callLog} >console.log</Button>
+            )}
         </div>
     );
 }
