@@ -16,6 +16,7 @@ export let Login = () => {
     const [loginEmail, setLoginEmail] = useState('');
     const [loginPassword, setLoginPassword] = useState('');
     const [activeUser, setActiveUser] = useState({name: '', login: false});
+    const [disableLogin, setDisableLogin] = useState(true);
     const navigate = useNavigate();
 
     const validate = (field: any, label: any) => {
@@ -56,7 +57,11 @@ export let Login = () => {
 
     useEffect(() =>{
         activeUser.login = true;
-    }, [activeUser]);
+        
+        if (loginEmail && loginPassword) {
+            setDisableLogin(false)
+        }
+    }, [activeUser, loginEmail, loginPassword]);
 
     const handleLogout = () => {
         setLoginEmail('')
@@ -102,13 +107,14 @@ export let Login = () => {
                             variant='primary'
                             type='submit'
                             onClick={handleLogin}
+                            disabled={disableLogin}
                         >
-                            Submit
+                            Log In
                         </Button>
                     </Card.Footer>
                 </Card>
             ):(
-                <Card bg='primary'>
+                <Card bg='light' border='secondary'>
                     <Card.Header>Login</Card.Header>
                     <Card.Body>
                         <h5>Success</h5>
@@ -116,7 +122,7 @@ export let Login = () => {
                     </Card.Body>
                     <Card.Footer>
                         <Button
-                            variant='light'
+                            variant='primary'
                             type='submit'
                             onClick={handleRedirect}
                         >
@@ -125,7 +131,7 @@ export let Login = () => {
                     </Card.Footer>
                     <Card.Footer>
                         <Button
-                            variant='light'
+                            variant='primary'
                             type='submit'
                             onClick={handleLogout}
                         >

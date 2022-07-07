@@ -1,5 +1,5 @@
 import React from 'react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { UserContext } from '../../context';
 import './CreateAccount.css';
 import { Button, Card } from 'react-bootstrap';
@@ -12,6 +12,7 @@ export let CreateAccount = () => {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [disableButton, setDisableButton] = useState(true);
     const navigate = useNavigate();
 
     const ctx: any = React.useContext(UserContext);
@@ -35,9 +36,22 @@ export let CreateAccount = () => {
             user.login = false;
             console.log(ctx);            
         });
-        ctx.users.push({name, email, password, balance: 100, login: false})
+        ctx.users.push({
+            name,
+            email, 
+            password, 
+            balance: 100,
+            history: [], 
+            login: false
+        })
         setShow(false)
     }
+
+    useEffect(() => {
+        if (name && email && password) {
+            setDisableButton(false)
+        }
+    }, [name, email, password])
 
     const clearForm = () => {
         setName('');
@@ -85,8 +99,9 @@ export let CreateAccount = () => {
                             variant='primary'
                             type='submit'
                             onClick={handleCreate}
+                            disabled={disableButton}
                         >
-                            Submit
+                            Create Account
                         </Button>
                     </Card.Footer>
                 </Card>

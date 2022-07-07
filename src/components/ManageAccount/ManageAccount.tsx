@@ -29,14 +29,33 @@ export const ManageAccount = () => {
     }, [activeUser, user, balance]);
 
     const handleDeposit = () => {
+        const userHistory = user.history;
         let newBalance = user.balance += deposit;
+        let date = new Date();
+        let transactionDate = `${date.getHours}:${date.getMinutes} at ${date.getDay}/${date.getMonth}/${date.getFullYear}`
+
+        userHistory.push({
+            transactionType: 'deposit',
+            transactionAmount: deposit,
+            newBalance,
+            transactionDate
+        });
+
         setBalance(newBalance);
         setDeposit(0);
     }
 
     const handleWithdraw = () => {
+        const userHistory = user.history;
         if (withdraw > balance) return;
         let newBalance = user.balance -= withdraw;
+
+        userHistory.push({
+            transactionType: 'withdraw',
+            transactionAmount: withdraw,
+            newBalance            
+        });
+
         setBalance(newBalance);
         setWithdraw(0);
     }
@@ -96,6 +115,7 @@ export const ManageAccount = () => {
                                     variant='primary'
                                     type='submit'
                                     onClick={handleWithdraw}
+                                    disabled={withdraw > balance ? true : false}
                                 >
                                     Withdraw
                                 </Button>
