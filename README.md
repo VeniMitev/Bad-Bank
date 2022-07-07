@@ -1,3 +1,5 @@
 # Bad Bank project from MIT xPRO
 
-[Deployment](https://venelin-mitev-bad-bank.s3.us-west-1.amazonaws.com) 
+[Deployment](http://venelin-mitev-bad-bank.s3-website-us-west-1.amazonaws.com/) 
+
+
