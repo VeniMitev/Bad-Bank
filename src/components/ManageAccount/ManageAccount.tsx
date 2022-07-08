@@ -15,6 +15,8 @@ export const ManageAccount = () => {
     const [withdraw, setWithdraw] = useState(0);
     const [balance, setBalance] = useState(user);
     const [deposit, setDeposit] = useState(0);
+    const [successWithdraw, setSuccessWithdraw] = useState('');
+    const [successDeposit, setSuccessDeposit] = useState('');
     const navigate = useNavigate();
 
     const balanceStyle = {
@@ -42,12 +44,15 @@ export const ManageAccount = () => {
         });
 
         setBalance(newBalance);
+        setSuccessDeposit('Succesful Transaction');
+        setSuccessWithdraw('');
         setDeposit(0);
     }
 
     const handleWithdraw = () => {
+
         const userHistory = user.history;
-        if (withdraw > balance) return;
+
         let newBalance = user.balance -= withdraw;
 
         userHistory.push({
@@ -57,6 +62,8 @@ export const ManageAccount = () => {
         });
 
         setBalance(newBalance);
+        setSuccessWithdraw('Succesful Transaction');   
+        setSuccessDeposit('');     
         setWithdraw(0);
     }
 
@@ -75,7 +82,6 @@ export const ManageAccount = () => {
                 <Card bg='light' border='secondary'>
                     <Card.Header><h3>Deposit</h3></Card.Header>
                     <Card.Body>
-                        <>
                             <h5>Deposit Amount</h5>
                             <input 
                                 type='number'
@@ -84,13 +90,14 @@ export const ManageAccount = () => {
                                 min='0'
                                 onChange={e => setDeposit(Number(e.currentTarget.value))}                     
                             />
-                        </>
+                            <p style={{color: 'green'}}>{!deposit ? successDeposit : ''}</p>
                     </Card.Body>
                     <Card.Footer>
                         <Button
                             variant='primary'
                             type='submit'
                             onClick={handleDeposit}
+                            disabled={!deposit ? true : false}
                         >
                             Deposit
                         </Button>
@@ -109,16 +116,18 @@ export const ManageAccount = () => {
                                     max={balance}
                                     onChange={e => setWithdraw(Number(e.currentTarget.value))}                     
                                 />
+                                <p style={{color: 'green'}}>{withdraw > balance || withdraw  ? '' : successWithdraw}</p>
+                                <p style={{color: 'red'}}>{withdraw > balance ? 'Amount Higher than Balance' : ''}</p>                               
                             </Card.Body>
                             <Card.Footer>
                                 <Button
                                     variant='primary'
                                     type='submit'
                                     onClick={handleWithdraw}
-                                    disabled={withdraw > balance ? true : false}
+                                    disabled={withdraw > balance || !withdraw ? true : false}
                                 >
                                     Withdraw
-                                </Button>
+                                </Button>                        
                             </Card.Footer>
                         </>
                     ) : (

@@ -7,9 +7,9 @@ import { Button, Accordion } from 'react-bootstrap';
 export let AllData = () => {
     const ctx: any = React.useContext(UserContext);
     const user = ctx.users.map(({
-        name, 
-        email, 
-        password, 
+        name,
+        email,
+        password,
         balance,
         history,
         login
@@ -48,7 +48,7 @@ export let AllData = () => {
                 </Accordion.Header>
                 <Accordion.Body>
                     <>
-                        <h6>Current Balance: {balance}</h6>
+                        <h6>Current Balance: ${balance}</h6>
                         <p>Transaction History: </p>
                         <ol>{transactionHistory}</ol>
                     </>
@@ -57,13 +57,13 @@ export let AllData = () => {
         )
     })
 
-    const [accounts, SetAccounts] = useState(user);
+    const [accounts, setAccounts] = useState(user);
 
     const handleLogout = () => {
         ctx.users.forEach((user: any) => {
             user.login = false;       
         })
-        SetAccounts(user)
+        setAccounts(user)
     }
 
     return (
