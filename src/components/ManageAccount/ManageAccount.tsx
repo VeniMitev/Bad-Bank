@@ -110,6 +110,7 @@ export const ManageAccount = () => {
                                 <h5>Withdraw Amount</h5>
                                 <input 
                                     type='number'
+                                    placeholder='0'
                                     id='withdraw'
                                     value={withdraw} 
                                     min='0'

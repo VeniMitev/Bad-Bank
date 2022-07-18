@@ -47,7 +47,13 @@ export let Login = () => {
         if (!validate(loginEmail, 'email')) return;
         if (!validate(loginPassword, 'password')) return;
 
-        const user = ctx.users.filter(({email, password}:{email: string; password:string}) => {
+        const user = ctx.users.filter(({
+            email, 
+            password
+        }:{
+            email: string; 
+            password:string
+        }) => {
             return loginEmail === email && loginPassword === password;
         });
 

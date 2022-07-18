@@ -14,7 +14,44 @@ root.render(
   <UserContext.Provider value={
     {
       users:[
-        
+        {
+          name: 'John Doe',
+          email: 'john@mit.edu',
+          password: 'secret',
+          balance: 101,
+          history: [
+            {
+              transactionType: 'withdraw',
+              transactionAmount: 20,
+              newBalance: 81  
+            },
+            {
+              transactionType: 'deposit',
+              transactionAmount: 20,
+              newBalance: 101  
+            }
+          ],
+          login: false
+        },
+        {
+          name: 'Jane Doe',
+          email: 'jane@mit.edu',
+          password: 'mystery',
+          balance: 101,
+          history: [
+            {
+              transactionType: 'withdraw',
+              transactionAmount: 20,
+              newBalance: 81  
+            },
+            {
+              transactionType: 'deposit',
+              transactionAmount: 20,
+              newBalance: 101  
+            }
+          ],
+          login: false
+        }
       ]
     }
   }>
