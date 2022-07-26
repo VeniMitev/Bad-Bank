@@ -127,13 +127,7 @@ export let Login = () => {
                         <p>Welcome, {activeUser.name}</p>
                     </Card.Body>
                     <Card.Footer>
-                        <Button
-                            variant='primary'
-                            type='submit'
-                            onClick={handleRedirect}
-                        >
-                            Manage Account
-                        </Button>
+                        <p>Success!!</p>
                     </Card.Footer>
                     <Card.Footer>
                         <Button

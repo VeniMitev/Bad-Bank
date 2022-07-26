@@ -9,13 +9,7 @@ export let NavBar = () => {
                 <Navbar.Brand as={NavLink} to='/'>Bad Bank</Navbar.Brand>
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
                 <Navbar.Collapse id="basic-navbar-nav">
-                <Nav className="me-auto">
-                    <Nav.Link
-                        as={NavLink}
-                        to=''
-                    >
-
-                    </Nav.Link>
+                <Nav variant="tabs" defaultActiveKey="/home" className="me-auto">
                     <Nav.Link
                         as={NavLink}
                         to='/'
@@ -36,9 +30,15 @@ export let NavBar = () => {
                     </Nav.Link>
                     <Nav.Link
                         as={NavLink}
-                        to='/manage-account'
+                        to='/deposit'
                     >
-                        Manage Account
+                        Deposit
+                    </Nav.Link>
+                    <Nav.Link
+                        as={NavLink}
+                        to='/withdraw'
+                    >
+                        Withdraw
                     </Nav.Link>
                     <Nav.Link
                         as={NavLink}

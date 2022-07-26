@@ -5,7 +5,8 @@ import { NavBar } from './components/NavBar/NavBar';
 import { Home } from './components/Home/Home';
 import { CreateAccount } from './components/CreateAccount/CreateAccount';
 import { Login } from './components/Login/Login';
-import { ManageAccount } from './components/ManageAccount/ManageAccount';
+import { Deposit } from './components/ManageAccount/Deposit';
+import { Withdraw } from './components/ManageAccount/Withdraw';
 import { AllData } from './components/AllData/AllData';
 
 function App() {
@@ -16,7 +17,8 @@ function App() {
           <Route path='/' element={<Home />} />
           <Route path='/create-account' element={<CreateAccount />} />
           <Route path='/login' element={<Login />} />
-          <Route path='/manage-account' element={<ManageAccount />} />
+          <Route path='/deposit' element={<Deposit />} />
+          <Route path='/withdraw' element={<Withdraw />} />
           <Route path='/alldata' element={<AllData />} />
         </Routes>
     </div>
