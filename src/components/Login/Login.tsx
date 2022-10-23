@@ -1,143 +1,81 @@
-import React from 'react';
 import { useState, useEffect } from 'react';
-import { UserContext } from '../../context';
 import './Login.css';
-import { Button, Card } from 'react-bootstrap';
-import { useNavigate } from "react-router-dom";
+import { Button, Card, Stack, PasswordInput, TextInput } from '@mantine/core';
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { auth } from '../../firebase';
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { LogOutButton } from '../LogOutButton';
 
 export let Login = () => {
-    const ctx: any = React.useContext(UserContext);
-    const user = ctx.users.find(({login}:{login: boolean}) => {
-        return login === true;
-    });
-
-    const [show, setShow] = useState(!user);
-    const [status, setStatus] = useState('');
+    const [user] = useAuthState(auth)
     const [loginEmail, setLoginEmail] = useState('');
     const [loginPassword, setLoginPassword] = useState('');
-    const [activeUser, setActiveUser] = useState({name: '', login: false});
+    const [error, setError] = useState(false);
     const [disableLogin, setDisableLogin] = useState(true);
-    const navigate = useNavigate();
 
-    const validate = (field: any, label: any) => {
-        if (!field) {
-            setStatus(`Error: ${label}`);
-            setTimeout(() => setStatus(''), 3000);
-            console.log(status)
-            return false;
-        } else {
-            const user = ctx.users.filter(({email, password}:{email: string; password:string}) => {
-                return loginEmail === email && loginPassword === password;
-            });
-
-            if (user[0] === undefined) {
-                setStatus(`Error: ${label}`);
-                setTimeout(() => setStatus(''), 3000);
-                console.log(status)
-                return false
-            }
-        }
-        return true;
-    }
-
-    const handleLogin = () => {
-        ctx.users.forEach((user: any) => {
-            user.login = false;           
-        })
-        if (!validate(loginEmail, 'email')) return;
-        if (!validate(loginPassword, 'password')) return;
-
-        const user = ctx.users.filter(({
-            email, 
-            password
-        }:{
-            email: string; 
-            password:string
-        }) => {
-            return loginEmail === email && loginPassword === password;
-        });
-
-        setActiveUser(user[0]);
-        setShow(false);
+    const handleLogin = async () => {
+        signInWithEmailAndPassword(auth, loginEmail, loginPassword)
+            .then(() => {
+                setLoginEmail('');
+                setLoginPassword('');
+                setError(false);
+            })
+            .catch(() => {
+                setError(true);
+            })
     }
 
     useEffect(() =>{
-        activeUser.login = true;
-        
-        if (loginEmail && loginPassword) {
+        if (loginEmail && loginPassword && loginPassword.length >= 6) {
             setDisableLogin(false)
         }
-    }, [activeUser, loginEmail, loginPassword]);
-
-    const handleLogout = () => {
-        setLoginEmail('')
-        setLoginPassword('')
-        setShow(true);
-        setActiveUser({name: '', login: false})
-
-        ctx.users.forEach((user: any) => {
-            user.login = false;
-            console.log(ctx);            
-        })
-    }
-
-    const handleRedirect = () => {
-        navigate('/manage-account');
-    }
+    }, [loginEmail, loginPassword]);
 
     return (
         <div className="card-container">
-            {show ? (
-                <Card bg='light' border='secondary'>
-                    <Card.Header><h3>Login</h3></Card.Header>
-                    <Card.Body>
-                        <>
-                            <h5>Email</h5>
-                            <input 
-                                type='text'
-                                id='email'
-                                value={loginEmail} 
-                                onChange={e => setLoginEmail(e.currentTarget.value)} 
-                            />
-                            <h5>Password</h5>
-                            <input 
-                                type='password'
-                                id='password' 
-                                value={loginPassword} 
-                                onChange={e => setLoginPassword(e.currentTarget.value)} 
-                            />
-                        </>
-                    </Card.Body>
-                    <Card.Footer>
+            {!user ? (
+                <Card 
+                    shadow='lg' 
+                    radius='xs'
+                    withBorder
+                >
+                    <Stack align='center'>
+                        <h3>Login</h3>
+                        
+                        <h5>Email</h5>
+                        <TextInput 
+                            placeholder='your@email.com'
+                            style={{width: '90%'}}
+                            value={loginEmail} 
+                            onChange={e => setLoginEmail(e.currentTarget.value)} 
+                        />
+                        <h5>Password</h5>
+                        <PasswordInput 
+                            placeholder='******'
+                            style={{width: '90%'}}
+                            value={loginPassword} 
+                            onChange={e => setLoginPassword(e.currentTarget.value)} 
+                        />
+                        {error ? 'Wrong credentials!' : ''}
+
                         <Button
-                            variant='primary'
-                            type='submit'
                             onClick={handleLogin}
                             disabled={disableLogin}
                         >
                             Log In
                         </Button>
-                    </Card.Footer>
+                    </Stack>                   
                 </Card>
             ):(
-                <Card bg='light' border='secondary'>
-                    <Card.Header>Login</Card.Header>
-                    <Card.Body>
-                        <h5>Success</h5>
-                        <p>Welcome, {activeUser.name}</p>
-                    </Card.Body>
-                    <Card.Footer>
-                        <p>Success!!</p>
-                    </Card.Footer>
-                    <Card.Footer>
-                        <Button
-                            variant='primary'
-                            type='submit'
-                            onClick={handleLogout}
-                        >
-                            Log Out
-                        </Button>
-                    </Card.Footer>
+                <Card 
+                    shadow='lg' 
+                    radius='xs'
+                    withBorder
+                >
+                    <h5>Success</h5>
+                    <p>Welcome, {user?.email}</p>
+        
+                    <LogOutButton />
                 </Card>
             )}
         </div>

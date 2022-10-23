@@ -1,19 +1,14 @@
-import React from 'react';
 import { useState, useEffect } from 'react';
-import { UserContext } from '../../context';
-import './ManageAccount.css';
-import { Button, Card } from 'react-bootstrap';
+import { Button, Card, Stack, NumberInput, Group } from '@mantine/core';
 import { useNavigate } from "react-router-dom";
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { auth, db } from '../../firebase';
+import { arrayUnion, doc, getDoc, increment, updateDoc } from 'firebase/firestore';
 
 export const Withdraw = () => {
-    const ctx: any = React.useContext(UserContext);
-    const user = ctx.users.find(({login}:{login: boolean}) => {
-        return login === true;
-    });
-
-    const [activeUser, setActiveUser] = useState(user);
+    const [user, loading] = useAuthState(auth)
     const [withdraw, setWithdraw] = useState(0);
-    const [balance, setBalance] = useState(user);
+    const [balance, setBalance] = useState(0);
     const [successWithdraw, setSuccessWithdraw] = useState('');
     const navigate = useNavigate();
 
@@ -21,23 +16,39 @@ export const Withdraw = () => {
         fontSize: '2rem'
     }
 
-    useEffect(() =>{
-        if (!balance) return;
-        if (!activeUser) return;
-        setActiveUser(user);        
-        setBalance(user.balance);
-    }, [activeUser, user, balance]);
+    useEffect(() => {
+        const data = async () => {
+            if (user) {
+                const docSnap = await getDoc(doc(db, 'users', user.uid))
+
+                if (docSnap.exists()) {
+                    setBalance(docSnap.data().balance)
+                }
+            }
+        }
+        data()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [loading])
+
 
     const handleWithdraw = () => {
-        const userHistory = user.history;
+        let newBalance = balance - withdraw;
 
-        let newBalance = user.balance -= withdraw;
+        if (user) {
+            const newData = {
+                balance: increment(-withdraw),
+                history: arrayUnion({
+                    type: 'withdraw',
+                    amount: withdraw,
+                    newBalance,
+                    createdAt: new Date().toLocaleString()
+                })
+            }
 
-        userHistory.push({
-            transactionType: 'withdraw',
-            transactionAmount: withdraw,
-            newBalance            
-        });
+            const docRef = doc(db, 'users', user.uid)
+
+            updateDoc(docRef, newData)
+        }
 
         setBalance(newBalance);
         setSuccessWithdraw('Succesful Transaction');       
@@ -51,78 +62,72 @@ export const Withdraw = () => {
     const handleRedirectCreate = () => {
         navigate('/create-account');
     }
+
+    if (loading) return <>Loading...</>
  
     return(
         <>
-            {activeUser ? (
+            {user ? (
                 <div className="card-container">
-                <Card bg='light' border='secondary'>
-                    <Card.Header><h3>Withdraw</h3></Card.Header>
-                    {balance ? (
-                        <>
-                            <Card.Body>
+                <Card 
+                    shadow='lg' 
+                    radius='xs'
+                    withBorder
+                >
+                    <Stack align='center'>
+                        <h3>Withdraw</h3>
+                        {balance ? (
+                            <>
                                 <h5>Withdraw Amount</h5>
-                                <input 
+                                <NumberInput 
                                     type='number'
-                                    placeholder='0'
-                                    id='withdraw'
                                     value={withdraw} 
-                                    min='0'
                                     max={balance}
-                                    onChange={e => setWithdraw(Number(e.currentTarget.value))}                     
+                                    onChange={(value: any) => setWithdraw(value)}                     
                                 />
                                 <p style={{color: 'green'}}>{withdraw > balance || withdraw  ? '' : successWithdraw}</p>
                                 <p style={{color: 'red'}}>{withdraw > balance ? 'Amount Higher than Balance' : ''}</p>                               
-                            </Card.Body>
-                            <Card.Footer>
+        
                                 <Button
-                                    variant='primary'
-                                    type='submit'
                                     onClick={handleWithdraw}
                                     disabled={withdraw > balance || !withdraw ? true : false}
                                 >
                                     Withdraw
-                                </Button>                        
-                            </Card.Footer>
-                        </>
-                    ) : (
-                        <Card.Body >
-                            <h5>Withdraw Amount</h5>
-                            <p>Balance is currently $0<br/>Put some cash in!!!</p>
-                        </Card.Body>
-                    )}
-                    <hr />
-                    <Card.Header><h3>Balance</h3></Card.Header>
-                    <Card.Body>
-                        <>
-                            <h5>Current Balance</h5>
-                            <p style={balanceStyle}>{activeUser ? `$${balance}` : `Login to display Information`}</p>
-                        </>
-                    </Card.Body>
+                                </Button>     
+                            </>
+                        ) : (
+                            <>
+                                <h5>Withdraw Amount</h5>
+                                <p>Balance is currently $0<br/>Put some cash in!!!</p>
+                            </>
+                        )}
+                    
+                        <h5>Current Balance</h5>
+                        <p style={balanceStyle}>{user ? `$${balance}` : `Login to display Information`}</p>
+                    </Stack>
                 </Card>
             </div>
             ) : (
                 <div className="card-container">
-                    <Card bg='light' border='secondary' >
-                        <Card.Body >
-                            <h5>Login or Create Account First</h5>                        
-                        </Card.Body>
-                        <Card.Footer>
+                    <Card 
+                        shadow='lg' 
+                        radius='xs'
+                        withBorder
+                    >
+                        <h5>Login or Create Account First</h5>                        
+                        <Group position='center' grow style={{marginTop: '1em'}}>
                             <Button
-                                variant='primary'
                                 onClick={handleRedirectLogin}
                             >
-                              Log In
+                                Log In
                             </Button>
-                        </Card.Footer>
-                        <Card.Footer>
+                
                             <Button
-                                variant='primary'
                                 onClick={handleRedirectCreate}
                             >
-                              Create Account
+                                Create Account
                             </Button>
-                        </Card.Footer>
+                        </Group>
                     </Card>
                 </div>
             )}

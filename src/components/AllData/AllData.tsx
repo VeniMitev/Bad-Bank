@@ -1,84 +1,63 @@
-import React from 'react';
-import { UserContext } from '../../context';
-import { useState, useEffect } from "react";
 import './AllData.css';
-import { Accordion } from 'react-bootstrap';
+import { Accordion, Stack } from '@mantine/core';
+import { useCollection } from 'react-firebase-hooks/firestore';
+import { collection } from 'firebase/firestore';
+import { auth, db } from '../../firebase';
+import { useAuthState } from 'react-firebase-hooks/auth';
 
 export let AllData = () => {
-    const ctx: any = React.useContext(UserContext);
-    const user = ctx.users.map(({
-        name,
-        email,
-        password,
-        balance,
-        history,
-        login
-    }:{ 
-        name: string; 
-        email: string;
-        password: string; 
-        balance: number;
-        history: [];
-        login: boolean
-    }, i: any) => {
-        let transactionHistory = history.map(({
-            transactionType,
-            transactionAmount,
-            newBalance
-        }:{
-            transactionType: string;
-            transactionAmount: number;
-            newBalance: number
-        }, i: any) => {
+    const [currentUser] = useAuthState(auth)
+    const [value, loading] = useCollection(
+        collection(db, 'users')
+    )
+
+    const user = value?.docs.map((doc, i: any) => {
+        const data = doc.data();
+        let transactionHistory = data.history.map((hist: any, i: number) => {
             let style: object;
-            if (transactionType === 'deposit') {
+            if (hist.type === 'deposit') {
                 style = {color: 'green'} 
             } else {
                 style = {color: 'red'}
             }
+            
             return (
                 <li key={i}>
                     <p style={style}>
-                        {transactionType === 'deposit' ? 'Deposit' : 'Withdraw'}: ${transactionAmount} | New Balance: ${newBalance}
+                        {hist.type === 'deposit' ? 'Deposit' : 'Withdraw'}: ${hist.amount} | New Balance: ${hist.newBalance} | at: {hist.createdAt}
                     </p>
                 </li>
             )
         })
 
         return (
-            <Accordion.Item eventKey={i}>
-                <Accordion.Header>
-                    <h5 style={login ? {color: 'green'} : {}}>
-                        {login ? 'Current User' : ''}
-                        {login ? <hr /> : ''}
-                        User: {name} | Click for Account Information!
-                    </h5>
-                </Accordion.Header>
-                <Accordion.Body>
+            <Accordion.Item value={data.name}>
+                <Accordion.Control>
+                    <h3>{data.name}{data.uid === currentUser?.uid ? ' - Current User' : ''}</h3>
+                </Accordion.Control>
+                <Accordion.Panel>
                     <>
-                        <h6>Email: {email}</h6>
-                        <h6>Password: {password}</h6>
-                        <h6>Current Balance: ${balance}</h6>
+                        <h6>Email: {data.email}</h6>
+                        <h6>Password: {data.password}</h6>
+                        <h6>Current Balance: ${data.balance}</h6>
                         <p>Transaction History: </p>
-                        <ol>{transactionHistory}</ol>
+                        <ol>
+                            {transactionHistory}
+                        </ol>
                     </>
-                </Accordion.Body>
+                </Accordion.Panel>
             </Accordion.Item>
         )
     })
 
-    const [accounts, setAccounts] = useState(user);
-
-    useEffect(() => {
-        setAccounts(user)
-    }, [user])
+    if(loading) return <>Loading...</>
 
     return (
-        <div className='alldata-table'>
+        <Stack align='center'>
             <h1>AllData</h1>            
-            <Accordion defaultActiveKey="0">
-                {accounts}
+            <Accordion style={{width: '50%'}} variant="separated" defaultValue="userData">
+                {user}
             </Accordion>
-        </div>        
+        </Stack>        
     );
 }

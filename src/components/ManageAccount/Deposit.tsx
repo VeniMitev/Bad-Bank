@@ -1,18 +1,14 @@
-import React from 'react';
 import { useState, useEffect } from 'react';
-import { UserContext } from '../../context';
-import './ManageAccount.css';
-import { Button, Card } from 'react-bootstrap';
+import './ManageAccount.css'
+import { Button, Card, Stack, NumberInput, Group } from '@mantine/core';
 import { useNavigate } from "react-router-dom";
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { auth, db } from '../../firebase';
+import { arrayUnion, doc, getDoc, increment, updateDoc } from 'firebase/firestore';
 
 export const Deposit = () => {
-    const ctx: any = React.useContext(UserContext);
-    const user = ctx.users.find(({login}:{login: boolean}) => {
-        return login === true;
-    });
-
-    const [activeUser, setActiveUser] = useState(user);
-    const [balance, setBalance] = useState(user);
+    const [user, loading] = useAuthState(auth)
+    const [balance, setBalance] = useState(0);
     const [deposit, setDeposit] = useState(0);
     const [successDeposit, setSuccessDeposit] = useState('');
     const navigate = useNavigate();
@@ -21,27 +17,40 @@ export const Deposit = () => {
         fontSize: '2rem'
     }
 
-    useEffect(() =>{
-        if (!balance) return;
-        if (!activeUser) return;
-        setActiveUser(user);        
-        setBalance(user.balance);
-    }, [activeUser, user, balance]);
+    useEffect(() => {
+        const data = async () => {
+            if (user) {
+                const docSnap = await getDoc(doc(db, 'users', user.uid))
 
-    const handleDeposit = () => {
-        const userHistory = user.history;
-        let newBalance = user.balance += deposit;
-        let date = new Date();
-        let transactionDate = `${date.getHours}:${date.getMinutes} at ${date.getDay}/${date.getMonth}/${date.getFullYear}`
+                if (docSnap.exists()) {
+                    setBalance(docSnap.data().balance)
+                }
+            }
+        }
+        data()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [loading])
 
-        userHistory.push({
-            transactionType: 'deposit',
-            transactionAmount: deposit,
-            newBalance,
-            transactionDate
-        });
+    const handleDeposit = async () => {
+        let newBalance = balance + deposit;
 
-        setBalance(newBalance);
+        if (user) {
+            const newData = {
+                balance: increment(deposit),
+                history: arrayUnion({
+                    type: 'deposit',
+                    amount: deposit,
+                    newBalance,
+                    createdAt: new Date().toLocaleString()
+                })
+            }
+
+            const docRef = doc(db, 'users', user.uid)
+
+            updateDoc(docRef, newData)
+        }
+
+        setBalance(newBalance)
         setSuccessDeposit('Succesful Transaction');
         setDeposit(0);
     }
@@ -56,63 +65,58 @@ export const Deposit = () => {
  
     return(
         <>
-            {activeUser ? (
+            {user ? (
                 <div className="card-container">
-                <Card bg='light' border='secondary'>
-                    <Card.Header><h3>Deposit</h3></Card.Header>
-                    <Card.Body>
+                    <Card 
+                        shadow='lg' 
+                        radius='xs'
+                        withBorder
+                    >
+                        <Stack align='center'>                         
+                            <h3>Deposit</h3>
                             <h5>Deposit Amount</h5>
-                            <input 
+                            <NumberInput 
                                 type='number'
                                 id='deposit'
                                 value={deposit} 
-                                min='0'
-                                onChange={e => setDeposit(Number(e.currentTarget.value))}                     
+                                onChange={(value: any) => setDeposit(value)}                     
                             />
                             <p style={{color: 'green'}}>{!deposit ? successDeposit : ''}</p>
-                    </Card.Body>
-                    <Card.Footer>
-                        <Button
-                            variant='primary'
-                            type='submit'
-                            onClick={handleDeposit}
-                            disabled={!deposit ? true : false}
-                        >
-                            Deposit
-                        </Button>
-                    </Card.Footer>
-                    <hr />
-                    <Card.Header><h3>Balance</h3></Card.Header>
-                    <Card.Body>
-                        <>
+
+                            <Button
+                                onClick={handleDeposit}
+                                disabled={!deposit ? true : false}
+                            >
+                                Deposit
+                            </Button>                        
+
                             <h5>Current Balance</h5>
-                            <p style={balanceStyle}>{activeUser ? `$${balance}` : `Login to display Information`}</p>
-                        </>
-                    </Card.Body>
-                </Card>
-            </div>
+                            <p style={balanceStyle}>{user ? `$${balance}` : `Login to display Information`}</p>                   
+                        </Stack>
+                    </Card>
+                </div>
             ) : (
                 <div className="card-container">
-                    <Card bg='light' border='secondary' >
-                        <Card.Body >
-                            <h5>Login or Create Account First</h5>                        
-                        </Card.Body>
-                        <Card.Footer>
+                    <Card 
+                        shadow='lg' 
+                        radius='xs'
+                        withBorder
+                    >     
+                        <h5>Login or Create Account First</h5>                        
+
+                        <Group position='center' grow style={{marginTop: '1em'}}>
                             <Button
-                                variant='primary'
                                 onClick={handleRedirectLogin}
                             >
-                              Log In
+                                Log In
                             </Button>
-                        </Card.Footer>
-                        <Card.Footer>
+                
                             <Button
-                                variant='primary'
                                 onClick={handleRedirectCreate}
                             >
-                              Create Account
+                                Create Account
                             </Button>
-                        </Card.Footer>
+                        </Group>
                     </Card>
                 </div>
             )}

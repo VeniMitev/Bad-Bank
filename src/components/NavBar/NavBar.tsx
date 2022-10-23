@@ -1,8 +1,12 @@
 import { Navbar, Container, Nav } from 'react-bootstrap';
 import { NavLink } from "react-router-dom";
-
+import { LogOutButton } from '../LogOutButton';
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { auth } from '../../firebase';
 
 export let NavBar = () => {
+    const [user] = useAuthState(auth)
+
     return (
         <Navbar bg="light" expand="lg">
             <Container>
@@ -46,7 +50,14 @@ export let NavBar = () => {
                     >
                         AllData
                     </Nav.Link>
+
                 </Nav>
+                {user?.email && (
+                    <div>
+                        <span style={{paddingRight: '1em'}}>{user?.email}</span>
+                        <LogOutButton />
+                    </div>
+                )}                
                 </Navbar.Collapse>
             </Container>
         </Navbar>

@@ -1,21 +1,22 @@
-import React from 'react';
 import { useState, useEffect } from 'react';
-import { UserContext } from '../../context';
 import './CreateAccount.css';
 import { Button, Card } from 'react-bootstrap';
-import { useNavigate } from "react-router-dom";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { doc, setDoc } from 'firebase/firestore';
+import { db, auth } from '../../firebase';
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { LogOutButton } from '../LogOutButton';
 
 
 export let CreateAccount = () => {
-    const [show, setShow] = useState(true);
+    const [user] = useAuthState(auth)
+
     const [status, setStatus] = useState('');
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [disableButton, setDisableButton] = useState(true);
-    const navigate = useNavigate();
-
-    const ctx: any = React.useContext(UserContext);
+    const [shortPass, setShortPass] = useState(false)
 
     const validate = (field: any, label: any) => {
         if (!field) {
@@ -27,46 +28,43 @@ export let CreateAccount = () => {
         return true;
     }
 
-    const handleCreate = () => {
-        console.log(name, email, password);
+    const handleCreate = async () => {
+        if (password.length < 6) {
+            setShortPass(true);
+            return;
+        }
         if (!validate(name, 'name')) return;
         if (!validate(email, 'email')) return;
         if (!validate(password, 'password')) return;
-        ctx.users.forEach((user: any) => {
-            user.login = false;
-            console.log(ctx);            
-        });
-        ctx.users.push({
-            name,
-            email, 
-            password, 
-            balance: 100,
-            history: [], 
-            login: false
-        })
-        setShow(false)
+
+        createUserWithEmailAndPassword(auth, email, password)
+            .then(async (userCredential) => {
+                const user = userCredential.user;
+                console.log(user)
+
+                await setDoc(doc(db, 'users', user.uid), {
+                    uid: user.uid,
+                    name: name,
+                    email: email,
+                    password: password,
+                    balance: 0,
+                });
+            });
+
+        setName('');
+        setEmail('');
+        setPassword('');
     }
 
     useEffect(() => {
         if (name && email && password) {
             setDisableButton(false)
         }
-    }, [name, email, password])
-
-    const clearForm = () => {
-        setName('');
-        setEmail('');
-        setPassword('');
-        setShow(true);
-    }
-
-    const handleRedirect = () => {
-        navigate('/login');
-    }
+    }, [name, email, password]);
 
     return (
         <div className='card-container'>
-            {show ? (
+            {!user ? (
                 <Card bg='light' border='secondary'>
                     <Card.Header><h3>Create Account</h3></Card.Header>
                     <Card.Body>
@@ -92,6 +90,8 @@ export let CreateAccount = () => {
                                 value={password} 
                                 onChange={e => setPassword(e.currentTarget.value)} 
                             />
+                            <br />
+                            {shortPass ? '*Password need to be more than 6 character long!' : ''}
                         </>
                     </Card.Body>
                     <Card.Footer>
@@ -112,22 +112,7 @@ export let CreateAccount = () => {
                         <h5>Success</h5>
                     </Card.Body>
                     <Card.Footer>
-                        <Button
-                            variant='primary'
-                            type='submit'
-                            onClick={handleRedirect}
-                        >
-                            Log In 
-                        </Button>
-                    </Card.Footer>
-                    <Card.Footer>
-                        <Button
-                            variant='primary'
-                            type='submit'
-                            onClick={clearForm}
-                        >
-                            Add Another Account
-                        </Button>
+                        <LogOutButton />
                     </Card.Footer>
                 </Card>
             )}                
