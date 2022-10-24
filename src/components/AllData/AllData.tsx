@@ -31,9 +31,11 @@ export let AllData = () => {
         })
 
         return (
-            <Accordion.Item value={data.name}>
+            <Accordion.Item value={data.uid}>
                 <Accordion.Control>
-                    <h3>{data.name}{data.uid === currentUser?.uid ? ' - Current User' : ''}</h3>
+                    <h3>{data.name} {data.uid === currentUser?.uid ? (
+                        <span style={{color: 'green'}}>- Current User</span>
+                    ) : ''}</h3>
                 </Accordion.Control>
                 <Accordion.Panel>
                     <>
@@ -55,7 +57,12 @@ export let AllData = () => {
     return (
         <Stack align='center'>
             <h1>AllData</h1>            
-            <Accordion style={{width: '50%'}} variant="separated" defaultValue="userData">
+            <Accordion 
+                style={{width: '50%'}}
+                variant="separated" 
+                defaultValue="userData"
+                radius='xs'
+            >
                 {user}
             </Accordion>
         </Stack>        

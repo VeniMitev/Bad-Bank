@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import './CreateAccount.css';
-import { Button, Card } from 'react-bootstrap';
+import { Button, Card, Stack, PasswordInput, TextInput } from '@mantine/core';
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { doc, setDoc } from 'firebase/firestore';
 import { db, auth } from '../../firebase';
@@ -9,14 +9,14 @@ import { LogOutButton } from '../LogOutButton';
 
 
 export let CreateAccount = () => {
-    const [user] = useAuthState(auth)
-
+    const [user] = useAuthState(auth);
     const [status, setStatus] = useState('');
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [disableButton, setDisableButton] = useState(true);
-    const [shortPass, setShortPass] = useState(false)
+    const [shortPass, setShortPass] = useState(false);
+    const [error, setError] = useState(false);
 
     const validate = (field: any, label: any) => {
         if (!field) {
@@ -29,6 +29,8 @@ export let CreateAccount = () => {
     }
 
     const handleCreate = async () => {
+        setError(false)
+        setShortPass(false)
         if (password.length < 6) {
             setShortPass(true);
             return;
@@ -40,16 +42,19 @@ export let CreateAccount = () => {
         createUserWithEmailAndPassword(auth, email, password)
             .then(async (userCredential) => {
                 const user = userCredential.user;
-                console.log(user)
 
                 await setDoc(doc(db, 'users', user.uid), {
                     uid: user.uid,
                     name: name,
                     email: email,
                     password: password,
-                    balance: 0,
+                    balance: 100,
+                    history: []
                 });
-            });
+            })
+            .catch((err) => {
+                setError(err)
+            })
 
         setName('');
         setEmail('');
@@ -65,55 +70,57 @@ export let CreateAccount = () => {
     return (
         <div className='card-container'>
             {!user ? (
-                <Card bg='light' border='secondary'>
-                    <Card.Header><h3>Create Account</h3></Card.Header>
-                    <Card.Body>
-                        <>
-                            <h5>Name</h5>
-                            <input 
-                                type="input" 
-                                id='name' 
-                                value={name} 
-                                onChange={e => setName(e.currentTarget.value)} 
-                            />
-                            <h5>Email</h5>
-                            <input 
-                                type="input" 
-                                id='email' 
-                                value={email} 
-                                onChange={e => setEmail(e.currentTarget.value)} 
-                            />
-                            <h5>Password</h5>
-                            <input 
-                                type="password" 
-                                id='password' 
-                                value={password} 
-                                onChange={e => setPassword(e.currentTarget.value)} 
-                            />
-                            <br />
-                            {shortPass ? '*Password need to be more than 6 character long!' : ''}
-                        </>
-                    </Card.Body>
-                    <Card.Footer>
+                <Card 
+                    shadow='lg' 
+                    radius='xs'
+                    withBorder
+                >
+                    <Stack align='center'>
+                        <h3>Create Account</h3>                    
+                    
+                        <h5>Name</h5>
+                        <TextInput 
+                            placeholder='First Name, Last Name'
+                            style={{width: '90%'}}
+                            value={name} 
+                            onChange={e => setName(e.currentTarget.value)} 
+                        />
+                        <h5>Email</h5>
+                        <TextInput 
+                            placeholder='your@email.com'
+                            style={{width: '90%'}}
+                            value={email} 
+                            onChange={e => setEmail(e.currentTarget.value)} 
+                        />
+                        <h5>Password</h5>
+                        <PasswordInput 
+                            placeholder='******'
+                            style={{width: '90%'}}
+                            value={password} 
+                            onChange={e => setPassword(e.currentTarget.value)} 
+                        />
+                        <br />
+                        {shortPass ? '*Password need to be more than 6 character long!' : ''}
+                        {error ? 'Error Occured. Email might be already in use!' : ''}
+            
                         <Button
-                            variant='primary'
-                            type='submit'
                             onClick={handleCreate}
                             disabled={disableButton}
                         >
                             Create Account
-                        </Button>
-                    </Card.Footer>
+                        </Button>       
+                    </Stack>   
                 </Card>
             ):(
-                <Card bg='light' border='secondary'>
-                    <Card.Header>Create Account</Card.Header>
-                    <Card.Body>
-                        <h5>Success</h5>
-                    </Card.Body>
-                    <Card.Footer>
-                        <LogOutButton />
-                    </Card.Footer>
+                <Card 
+                    shadow='lg' 
+                    radius='xs'
+                    withBorder
+                >    
+                    <h5>Success</h5>
+                    <p>New User: {user?.email}</p>
+        
+                    <LogOutButton />              
                 </Card>
             )}                
         </div>
