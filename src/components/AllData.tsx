@@ -7,19 +7,19 @@ import {
     Stack, 
     Table
 } from '@mantine/core';
-import { useCollection } from 'react-firebase-hooks/firestore';
+import { useCollectionData } from 'react-firebase-hooks/firestore';
 import { collection } from 'firebase/firestore';
 import { auth, db } from '../firebase';
 import { useAuthState } from 'react-firebase-hooks/auth';
 
 export let AllData = () => {
     const [currentUser] = useAuthState(auth)
-    const [value, loading] = useCollection(
+    const [value, loading] = useCollectionData(
         collection(db, 'users')
     )
 
-    const user = value?.docs.map((doc, i: any) => {
-        const data = doc.data();
+    const user = value?.map((data: any, i: any) => {
+
         let transactionHistory = data.history.map((hist: any, i: number) => {
             let style: object;
             if (hist.type === 'deposit') {
@@ -29,9 +29,9 @@ export let AllData = () => {
             }
             
             return (
-                <tr style={style}>
+                <tr key={i} style={style}>
                     <td style={{textAlign: 'center'}}>{(hist.type).toUpperCase()}</td>
-                    <td style={{textAlign: 'center'}}>${hist.amount}</td>
+                    <td style={{textAlign: 'left'}}>${hist.amount}</td>
                     <td style={{textAlign: 'center'}}>${hist.newBalance}</td>
                     <td style={{textAlign: 'center'}}>{hist.createdAt}</td>
                 </tr>
@@ -45,7 +45,16 @@ export let AllData = () => {
             >
                 <Accordion.Control>
                     <Group>
-                        <Avatar />
+                        <Avatar 
+                            radius='xl'
+                            size='lg'
+                            alt={data.name}
+                        >
+                            {(data.name).split(' ').map((word: any) => {
+                                const letter = word.charAt(0).toUpperCase();
+                                return letter;
+                            })}
+                        </Avatar>
                         <h3>{data.name} {data.uid === currentUser?.uid ? (
                             <span style={{color: 'green'}}>- Current User</span>
                         ) : ''}</h3>
