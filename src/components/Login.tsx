@@ -1,10 +1,18 @@
-import { useState, useEffect } from 'react';
-import './Login.css';
-import { Button, Card, Stack, PasswordInput, TextInput } from '@mantine/core';
+import { 
+    useState, 
+    useEffect 
+} from 'react';
+import { 
+    Button,
+    Card, 
+    Stack, 
+    PasswordInput, 
+    TextInput 
+} from '@mantine/core';
 import { signInWithEmailAndPassword } from 'firebase/auth';
-import { auth } from '../../firebase';
+import { auth } from '../firebase';
 import { useAuthState } from 'react-firebase-hooks/auth';
-import { LogOutButton } from '../LogOutButton';
+import { LogOutButton } from './LogOutButton';
 
 export let Login = () => {
     const [user] = useAuthState(auth)

@@ -1,9 +1,25 @@
-import { Center, Divider, Navbar, NavLink, Stack, Title } from '@mantine/core';
+import { 
+    Divider, 
+    Navbar, 
+    NavLink, 
+    Stack, 
+    Title 
+} from '@mantine/core';
+import { 
+    Home2, 
+    UserPlus, 
+    Login, 
+    Cash, 
+    ArrowBarRight, 
+    ArrowBarToLeft, 
+    Database, 
+    BuildingBank 
+} from 'tabler-icons-react';
 import { Link, useLocation } from 'react-router-dom';
-import { LogOutButton } from '../LogOutButton';
+import { LogOutButton } from './LogOutButton';
 import { useAuthState } from 'react-firebase-hooks/auth';
-import { auth } from '../../firebase';
-import { Home2, UserPlus, Login, Cash, ArrowBarRight, ArrowBarLeft, Database, BuildingBank } from 'tabler-icons-react';
+import { auth } from '../firebase';
+
 
 export const NavBar = () => {
     const location = useLocation();
@@ -84,7 +100,7 @@ export const NavBar = () => {
                                 />
                             }
                             rightSection={
-                                <ArrowBarLeft 
+                                <ArrowBarToLeft 
                                     size={24}
                                     strokeWidth={2}
                                     color={'black'}
@@ -129,12 +145,10 @@ export const NavBar = () => {
             </Navbar.Section>
             <Navbar.Section>
                 {user?.email && (
-                    <Center>
-                        <Stack spacing={2} style={{marginBottom: '1em'}}>
-                            <span>{user?.email}</span>
-                            <LogOutButton />
-                        </Stack>                        
-                    </Center>
+                    <Stack align='center' spacing={2} style={{marginBottom: '1em'}}>
+                        <span>{user?.email}</span>
+                        <LogOutButton />
+                    </Stack>   
                 )}
             </Navbar.Section>
         </Navbar>

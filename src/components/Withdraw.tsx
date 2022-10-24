@@ -1,9 +1,24 @@
-import { useState, useEffect } from 'react';
-import { Button, Card, Stack, NumberInput, Group } from '@mantine/core';
+import { 
+    useState, 
+    useEffect 
+} from 'react';
+import { 
+    Button, 
+    Card, 
+    Stack, 
+    NumberInput, 
+    Group 
+} from '@mantine/core';
 import { useNavigate } from "react-router-dom";
 import { useAuthState } from 'react-firebase-hooks/auth';
-import { auth, db } from '../../firebase';
-import { arrayUnion, doc, getDoc, increment, updateDoc } from 'firebase/firestore';
+import { auth, db } from '../firebase';
+import { 
+    arrayUnion, 
+    doc, 
+    getDoc, 
+    increment, 
+    updateDoc 
+} from 'firebase/firestore';
 
 export const Withdraw = () => {
     const [user, loading] = useAuthState(auth)

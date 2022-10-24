@@ -1,11 +1,19 @@
-import { useState, useEffect } from 'react';
-import './CreateAccount.css';
-import { Button, Card, Stack, PasswordInput, TextInput } from '@mantine/core';
+import { 
+    useState, 
+    useEffect 
+} from 'react';
+import { 
+    Button, 
+    Card, 
+    Stack, 
+    PasswordInput, 
+    TextInput 
+} from '@mantine/core';
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { doc, setDoc } from 'firebase/firestore';
-import { db, auth } from '../../firebase';
+import { db, auth } from '../firebase';
 import { useAuthState } from 'react-firebase-hooks/auth';
-import { LogOutButton } from '../LogOutButton';
+import { LogOutButton } from './LogOutButton';
 
 
 export let CreateAccount = () => {
