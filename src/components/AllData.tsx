@@ -30,7 +30,7 @@ export let AllData = () => {
             
             return (
                 <tr style={style}>
-                    <td style={{textAlign: 'center'}}>{hist.type}</td>
+                    <td style={{textAlign: 'center'}}>{(hist.type).toUpperCase()}</td>
                     <td style={{textAlign: 'center'}}>${hist.amount}</td>
                     <td style={{textAlign: 'center'}}>${hist.newBalance}</td>
                     <td style={{textAlign: 'center'}}>{hist.createdAt}</td>

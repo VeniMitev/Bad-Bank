@@ -7,13 +7,30 @@ import { Deposit } from './components/Deposit';
 import { Withdraw } from './components/Withdraw';
 import { AllData } from './components/AllData';
 import { NavBar } from './components/NavBar';
-import { AppShell } from '@mantine/core';
+import { AppShell, Footer, Group } from '@mantine/core';
+import { Copyright } from 'tabler-icons-react';
 
 function App() {
   return (
     <AppShell 
       navbar={<NavBar />} 
       style={{backgroundColor: 'rgba(218, 223, 238, 0.769)'}}
+      footer={
+        <Footer height={40} p='xs'>
+          
+          <Group>
+            <Copyright 
+              size={15}
+              strokeWidth={2}
+              color={'black'}
+            />
+            <span> Veni Mitev 2022</span>
+            <a href="https://venimitev.dev">venimitev.dev</a>
+            <a href="https://github.com/VeniMitev/Bad-Bank">github repo for this project</a>
+          </Group>
+          
+        </Footer>
+      }
     >
       <Routes>
         <Route path='/' element={<Home />} />
