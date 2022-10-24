@@ -1,9 +1,9 @@
-import { Center, Navbar, NavLink, Stack, Title } from '@mantine/core';
+import { Center, Divider, Navbar, NavLink, Stack, Title } from '@mantine/core';
 import { Link, useLocation } from 'react-router-dom';
 import { LogOutButton } from '../LogOutButton';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth } from '../../firebase';
-import { Home2, UserPlus, Login, Cash, ArrowBarRight, ArrowBarLeft, Database } from 'tabler-icons-react';
+import { Home2, UserPlus, Login, Cash, ArrowBarRight, ArrowBarLeft, Database, BuildingBank } from 'tabler-icons-react';
 
 export const NavBar = () => {
     const location = useLocation();
@@ -12,12 +12,21 @@ export const NavBar = () => {
     return (
         <Navbar height={'100vh'} width={{base: 200}}>
             <Navbar.Section mt='xs' >
-                <Center >
+                <Stack align='center'>
+                    <BuildingBank 
+                        size={48}
+                        strokeWidth={2}
+                        color={'black'}
+                    />
                     <Title order={1} align='center'>
                         Bad Bank
                     </Title>
-                </Center>
+                </Stack>
             </Navbar.Section>
+            <Divider 
+                size='md'
+                style={{margin: '1em'}}
+            />
             <Navbar.Section grow>
                 <NavLink 
                     label="Home" 

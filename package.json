@@ -1,6 +1,7 @@
 {
   "name": "bad-bank",
   "version": "0.1.0",
+  "homepage": "https://bad-bank-8114f.web.app/",
   "private": true,
   "dependencies": {
     "@mantine/core": "^5.6.0",

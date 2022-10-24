@@ -1,5 +1,5 @@
 import './AllData.css';
-import { Accordion, Stack } from '@mantine/core';
+import { Accordion, Avatar, Group, Stack } from '@mantine/core';
 import { useCollection } from 'react-firebase-hooks/firestore';
 import { collection } from 'firebase/firestore';
 import { auth, db } from '../../firebase';
@@ -33,9 +33,12 @@ export let AllData = () => {
         return (
             <Accordion.Item value={data.uid}>
                 <Accordion.Control>
-                    <h3>{data.name} {data.uid === currentUser?.uid ? (
-                        <span style={{color: 'green'}}>- Current User</span>
-                    ) : ''}</h3>
+                    <Group>
+                        <Avatar />
+                        <h3>{data.name} {data.uid === currentUser?.uid ? (
+                            <span style={{color: 'green'}}>- Current User</span>
+                        ) : ''}</h3>
+                    </Group>
                 </Accordion.Control>
                 <Accordion.Panel>
                     <>
