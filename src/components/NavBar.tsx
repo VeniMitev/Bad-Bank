@@ -145,8 +145,12 @@ export const NavBar = () => {
             </Navbar.Section>
             <Navbar.Section>
                 {user?.email && (
-                    <Stack align='center' spacing={2} style={{marginBottom: '1em'}}>
-                        <span>{user?.email}</span>
+                    <Stack 
+                        align='center' 
+                        spacing={2} 
+                        style={{marginBottom: 'calc(1em + 40px)'}}
+                    >
+                        {user?.email}
                         <LogOutButton />
                     </Stack>   
                 )}
