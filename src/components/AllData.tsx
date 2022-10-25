@@ -20,7 +20,7 @@ export let AllData = () => {
 
     const user = value?.map((data: any, i: any) => {
 
-        let transactionHistory = data.history.map((hist: any, i: number) => {
+        const transactionHistory = data.history.map((hist: any, i: number) => {
             let style: object;
             if (hist.type === 'deposit') {
                 style = {color: 'green'} 
@@ -38,6 +38,11 @@ export let AllData = () => {
             )
         })
 
+        const initials = (data.name).split(' ').map((word: any) => {
+            const letter = word.charAt(0).toUpperCase();
+            return letter;
+        });
+
         return (
             <Accordion.Item 
                 value={data.name} 
@@ -50,10 +55,7 @@ export let AllData = () => {
                             size='lg'
                             alt={data.name}
                         >
-                            {(data.name).split(' ').map((word: any) => {
-                                const letter = word.charAt(0).toUpperCase();
-                                return letter;
-                            })}
+                            {initials}
                         </Avatar>
                         <h3>{data.name} {data.uid === currentUser?.uid ? (
                             <span style={{color: 'green'}}>- Current User</span>
@@ -89,7 +91,7 @@ export let AllData = () => {
 
     if(loading) {
         return (
-            <Center>
+            <Center style={{marginTop: '5em'}}>
                 <Loader 
                     color='dark' 
                     size='xl' 

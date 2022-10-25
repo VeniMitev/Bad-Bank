@@ -7,12 +7,19 @@ import {
     Card, 
     Stack, 
     PasswordInput, 
-    TextInput 
+    TextInput, 
+    Group,
 } from '@mantine/core';
-import { signInWithEmailAndPassword } from 'firebase/auth';
-import { auth } from '../firebase';
+import { 
+    signInWithEmailAndPassword, 
+    signInWithPopup, 
+    GoogleAuthProvider,
+} from 'firebase/auth';
+import { auth, db } from '../firebase';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { LogOutButton } from './LogOutButton';
+import { collection, doc, setDoc } from 'firebase/firestore';
+import { useCollectionData } from 'react-firebase-hooks/firestore';
 
 export let Login = () => {
     const [user] = useAuthState(auth)
@@ -20,6 +27,11 @@ export let Login = () => {
     const [loginPassword, setLoginPassword] = useState('');
     const [error, setError] = useState(false);
     const [disableLogin, setDisableLogin] = useState(true);
+    const [value] = useCollectionData(
+        collection(db, 'users')
+    )
+
+    const googleProvider = new GoogleAuthProvider();
 
     const handleLogin = async () => {
         signInWithEmailAndPassword(auth, loginEmail, loginPassword)
@@ -29,6 +41,36 @@ export let Login = () => {
                 setError(false);
             })
             .catch(() => {
+                setError(true);
+            })
+    }
+
+    const handleGoogleLogin = async () => {
+        signInWithPopup(auth, googleProvider)
+            .then(async (result) => {
+                const user = result.user;
+
+                const existingUser = value?.find((data) => {
+                    return data.uid === user.uid;
+                })
+
+                if (!existingUser) {
+                    await setDoc(doc(db, 'users', user.uid), {
+                        uid: user.uid,
+                        name: user.email,
+                        email: user.email,
+                        password: 'Google Auth',
+                        balance: 100,
+                        history: []
+                    });
+                }
+
+                setLoginEmail('');
+                setLoginPassword('');
+                setError(false);
+            })
+            .catch((err) => {
+                console.log(err)
                 setError(true);
             })
     }
@@ -66,12 +108,19 @@ export let Login = () => {
                         />
                         {error ? 'Wrong credentials!' : ''}
 
-                        <Button
-                            onClick={handleLogin}
-                            disabled={disableLogin}
-                        >
-                            Log In
-                        </Button>
+                        <Group>
+                            <Button
+                                onClick={handleLogin}
+                                disabled={disableLogin}
+                            >
+                                Log In
+                            </Button>
+                            <Button
+                                onClick={handleGoogleLogin}
+                            >
+                                Google Login
+                            </Button>
+                        </Group>
                     </Stack>                   
                 </Card>
             ):(
